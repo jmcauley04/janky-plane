@@ -1,13 +1,18 @@
 use bevy::prelude::*;
+use crate::game::projectiles::ProjectilesPlugin;
 use crate::game::player::PlayerPlugin;
 use crate::animation::AnimationPlugin;
 use crate::AppState;
-use systems::*;
+use components::*;
+use crate::game::map::MapPlugin;
 
 use self::systems::toggle_simulation;
 
+mod projectiles;
+mod map;
 mod player;
 mod systems;
+pub mod components;
 
 pub struct GamePlugin;
 
@@ -15,17 +20,13 @@ impl Plugin for GamePlugin {
     fn build(&self, app: &mut App) {        
         app.add_state::<SimulationState>()
             .add_plugin(PlayerPlugin)
+            .add_plugin(ProjectilesPlugin)
             .add_plugin(AnimationPlugin)
-            .add_startup_system(spawn_bg)
-            .add_startup_system(spawn_floor)
-            //.add_startup_system(spawn_obstacle)
-            .add_system(toggle_simulation.run_if(in_state(AppState::Game)));
+            .add_plugin(MapPlugin)
+            .add_systems(
+                (
+                    toggle_simulation,
+                )
+                .in_set(OnUpdate(AppState::Game)));
     }
-}
-
-#[derive(States, Debug, Clone, Copy, Eq, PartialEq, Hash, Default)]
-pub enum SimulationState {
-    Running,
-    #[default]
-    Paused,
 }

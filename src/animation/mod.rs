@@ -1,7 +1,7 @@
 use bevy::prelude::*;
 use systems::*;
 
-use crate::{AppState, game::SimulationState};
+use crate::{AppState, game::components::SimulationState};
 
 pub mod components;
 mod systems;

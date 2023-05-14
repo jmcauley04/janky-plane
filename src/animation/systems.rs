@@ -28,16 +28,18 @@ pub fn cycle_images(
     for (mut transform, cycle) in bg_query.iter_mut(){
         transform.translation += cycle.speed;
         
-        let current_zone = Rect::new(
-            transform.translation.x, 
-            transform.translation.y, 
-            transform.translation.x + cycle.zone.width(), 
-            transform.translation.y + cycle.zone.height()
-        );
-
-        if cycle.zone.intersect(current_zone).is_empty() {
-            transform.translation.x = cycle.zone.min.x;
-            transform.translation.y = cycle.zone.min.y;
+        if let Some(z) = cycle.zone {
+            let current_zone = Rect::new(
+                transform.translation.x, 
+                transform.translation.y, 
+                transform.translation.x + z.width(), 
+                transform.translation.y + z.height()
+            );
+    
+            if z.intersect(current_zone).is_empty() {
+                transform.translation.x = z.min.x;
+                transform.translation.y = z.min.y;
+            }
         }
     }
 }

@@ -1,7 +1,9 @@
 use bevy::prelude::*;
 
-#[derive(Component)]
-pub struct Projectile {
-    pub speed: usize,
-    pub mass: usize,
+#[derive(States, Debug, Clone, Copy, Eq, PartialEq, Hash, Default)]
+pub enum AppState{
+    #[default]
+    MainMenu,
+    Game,
+    GameOver,
 }

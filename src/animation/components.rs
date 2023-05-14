@@ -11,6 +11,6 @@ pub struct AnimationIndices {
 
 #[derive(Component)]
 pub struct CyclicImage{
-    pub zone: Rect,
+    pub zone: Option<Rect>,
     pub speed: Vec3,
 }
