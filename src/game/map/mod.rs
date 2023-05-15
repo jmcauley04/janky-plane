@@ -2,6 +2,7 @@ use bevy::prelude::*;
 use systems::*;
 
 mod systems;
+mod environment_maps;
 pub mod components;
 
 pub struct MapPlugin;
