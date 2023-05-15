@@ -6,3 +6,7 @@ pub enum SimulationState {
     #[default]
     Paused,
 }
+
+
+#[derive(Component)]
+pub struct Health(pub u32);

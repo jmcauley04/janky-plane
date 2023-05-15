@@ -3,7 +3,7 @@ use bevy_rapier2d::prelude::*;
 
 use crate::animation::components::CyclicImage;
 
-use super::components::Environment;
+use super::{components::Environment, environment_maps::*};
 
 pub fn spawn_bg(
     mut commands: Commands,
@@ -60,43 +60,28 @@ pub fn spawn_tiles (
     asset_server: Res<AssetServer>,
 )
 {
-    let map = r#"
-
-                            /----\
-                           (`oooo')                    (---)                                                                                        (---)                                                                                                        (---)
-                          
-                                                                                        (---)                                                                                        (---)
-                                                                                                                                                                                                           (---)                      (---)             
-
-
-
-     /----\  /----\  /----\     /----\  /----\                          /----\  /----\  /----\                          /----\  /----\  /----\  /----\  /----\  /----\  /----\  /----\  /----\  /----\  /----\  /----\  /----\  /----\  /----\  /----\  /----\  /----\  /----\  /----\ 
-    /`oooo'\/`oooo'\/`oooo'\   /`oooo'\/`oooo'\                        /`oooo'\/`oooo'\/`oooo'\                        /`oooo'\/`oooo'\/`oooo'\/`oooo'\/`oooo'\/`oooo'\/`oooo'\/`oooo'\/`oooo'\/`oooo'\/`oooo'\/`oooo'\/`oooo'\/`oooo'\/`oooo'\/`oooo'\/`oooo'\/`oooo'\/`oooo'\/`oooo'\
-    `oooooo'`oooooo'`oooooo'---`oooooo'`oooooo'------------------------`oooooo'`oooooo'`oooooo'------------------------`oooooo'`oooooo'`oooooo'`oooooo'`oooooo'`oooooo'`oooooo'`oooooo'`oooooo'`oooooo'`oooooo'`oooooo'`oooooo'`oooooo'`oooooo'`oooooo'`oooooo'`oooooo'`oooooo'`oooooo'
-    "#;
-
     let width = 64.0;
     let height = 64.0;
     let max_height = 12;
     let mut x = 0;
     let mut y = 0;
-    for c in map.chars() {
+    for c in MAP_1.chars() {
         if c == '\n' {            
-            x = 0;
-            y += 1;
+            y = 0;
+            x += 1;
             continue;
         } else if let Some(image) = match c {
-            '(' => Some("tiles/yellow/tileYellow_16.png"),
-            ')' => Some("tiles/yellow/tileYellow_17.png"),
-            '/' => Some("tiles/yellow/tileYellow_10.png"),
-            '\\' => Some("tiles/yellow/tileYellow_11.png"),
-            '-' => Some("tiles/yellow/tileYellow_06.png"),
+            '^' => Some("tiles/yellow/tileYellow_16.png"),
+            'v' => Some("tiles/yellow/tileYellow_17.png"),
+            '\\' => Some("tiles/yellow/tileYellow_10.png"),
+            '/' => Some("tiles/yellow/tileYellow_11.png"),
+            '|' => Some("tiles/yellow/tileYellow_06.png"),
             'o' => Some("tiles/yellow/tileYellow_04.png"),
-            '\'' => Some("tiles/yellow/tileYellow_20.png"),
-            '`' => Some("tiles/yellow/tileYellow_19.png"),
+            '`' => Some("tiles/yellow/tileYellow_20.png"),
+            ',' => Some("tiles/yellow/tileYellow_19.png"),
             _ => None,
         }{  
-            let transform = Transform::from_xyz(x as f32 * width,(max_height - y) as f32 * height, 10.0);
+            let transform = Transform::from_xyz(x as f32 * width,y as f32 * height, 10.0);
     
             commands.spawn(
                     SpriteBundle {
@@ -112,7 +97,7 @@ pub fn spawn_tiles (
                 .insert(ActiveEvents::COLLISION_EVENTS)
                 .insert(Environment);
         }
-        x += 1;  
+        y += 1;  
     }
 }
 
@@ -121,13 +106,13 @@ fn get_collider(c: char, width: f32, height: f32) -> Collider {
         // '(' => ,
         //     ')' => ,
             // this triangle works as expected
-            '/' => Collider::triangle(
+            '\\' => Collider::triangle(
                 Vec2::new(width / 2.0,-height / 2.0),
                 Vec2::new(width / 2.0, height / 2.0),  
                 Vec2::new(-width / 2.0,-height / 2.0)
             ),
             // this triangle is unreliable
-            '\\' => Collider::triangle(
+            '/' => Collider::triangle(
                 Vec2::new(width / 2.0,-height / 2.0), 
                 Vec2::new(-width / 2.0, height / 2.0), 
                 Vec2::new(-width / 2.0,-height / 2.0)

@@ -4,7 +4,7 @@ use super::components::*;
 use crate::AppState;
 
 pub mod components;
-mod systems;
+pub mod systems;
 
 pub const SHOT_FORCE: f32 = 1000.0;
 
